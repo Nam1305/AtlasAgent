@@ -1,0 +1,5 @@
+{"question": "What is the minimum password length required?", "answer": "12 characters", "source_id": "security-standard-1", "file": "security_standard.md", "page": 2}
+{"question": "How often must passwords be rotated?", "answer": "Every 90 days", "source_id": "security-standard-1", "file": "security_standard.md", "page": 2}
+{"question": "Who must approve travel expenses before booking?", "answer": "Your direct manager", "source_id": "expense-policy-1", "file": "expense_policy.md", "page": 1}
+{"question": "Within how many minutes must the on-call engineer respond during business hours?", "answer": "15 minutes", "source_id": "operations-1", "file": "operations_manual.md", "page": 3}
+{"question": "What is the on-call response time during business hours?", "answer": "15 minutes", "source_id": "operations-1", "file": "operations_manual.md", "page": 3}

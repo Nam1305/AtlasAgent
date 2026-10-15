@@ -1,0 +1,8 @@
+Deployment options
+==================
+
+1. Staging: deployed automatically on every push to the main branch.
+2. Production: deployed manually after a release candidate has been validated
+   in staging for at least 24 hours.
+3. Rollback: a previous version can be redeployed using the rollback command
+   described in the operations manual.

@@ -1,0 +1,2 @@
+{"session_a": "alice", "session_b": "bob", "shared_token": "X-PIN-9912", "expect_isolation": true}
+{"session_a": "carol", "session_b": "dave", "shared_token": "Order #4471", "expect_isolation": true}

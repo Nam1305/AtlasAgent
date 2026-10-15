@@ -1,0 +1,9 @@
+{
+  "documents": [
+    {"file": "employee_handbook.md", "type": "text", "ocr_required": false},
+    {"file": "deployment_options.txt", "type": "text", "ocr_required": false},
+    {"file": "security_standard_text.pdf", "type": "pdf_text", "ocr_required": false},
+    {"file": "expense_policy_scan.pdf", "type": "pdf_scan", "ocr_required": true},
+    {"file": "operations_manual_mixed.pdf", "type": "pdf_mixed", "ocr_required": "partial"}
+  ]
+}

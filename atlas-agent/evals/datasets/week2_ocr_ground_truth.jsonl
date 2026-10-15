@@ -1,0 +1,3 @@
+{"chunk_id": "security-standard-1", "expected_text_substring": "12 characters", "file": "security_standard.md", "page": 2}
+{"chunk_id": "expense-policy-1", "expected_text_substring": "direct manager", "file": "expense_policy.md", "page": 1}
+{"chunk_id": "operations-1", "expected_text_substring": "15 minutes", "file": "operations_manual.md", "page": 3}
