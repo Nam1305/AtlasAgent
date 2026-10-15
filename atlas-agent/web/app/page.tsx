@@ -1,106 +1,48 @@
 "use client";
 
-import { useState } from "react";
-
-type ChatMessage = { role: "user" | "assistant"; content: string };
+import { MessageSquare, Files } from "lucide-react";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { ChatPanel } from "@/components/ChatPanel";
+import { DocumentPanel } from "@/components/DocumentPanel";
+import { TopBar } from "@/components/TopBar";
 
 export default function Home() {
-  const [messages, setMessages] = useState<ChatMessage[]>([]);
-  const [input, setInput] = useState("");
-  const [busy, setBusy] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-
-  const apiBase = process.env.NEXT_PUBLIC_ATLAS_API_URL || "http://127.0.0.1:8000";
-
-  async function send() {
-    const text = input.trim();
-    if (!text || busy) return;
-    setError(null);
-    const next = [...messages, { role: "user" as const, content: text }];
-    setMessages(next);
-    setInput("");
-    setBusy(true);
-    try {
-      const resp = await fetch(`${apiBase}/chat`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ messages: next.map((m) => ({ role: m.role, content: m.content })) }),
-      });
-      if (!resp.ok) {
-        const body = await resp.json().catch(() => ({}));
-        throw new Error(body?.error?.message || `HTTP ${resp.status}`);
-      }
-      const data = await resp.json();
-      setMessages([...next, { role: "assistant", content: data.content ?? "" }]);
-    } catch (e: unknown) {
-      const msg = e instanceof Error ? e.message : "Request failed";
-      setError(msg);
-    } finally {
-      setBusy(false);
-    }
-  }
-
   return (
-    <main style={{ maxWidth: 720, margin: "0 auto", padding: 24 }}>
-      <h1 style={{ fontSize: 24, marginBottom: 16 }}>Atlas Agent</h1>
-      <div
-        style={{
-          minHeight: 320,
-          padding: 16,
-          background: "#1e293b",
-          borderRadius: 8,
-          marginBottom: 16,
-          whiteSpace: "pre-wrap",
-        }}
-      >
-        {messages.length === 0 ? (
-          <p style={{ color: "#94a3b8" }}>Ask anything to get started.</p>
-        ) : (
-          messages.map((m, i) => (
-            <div key={i} style={{ marginBottom: 8 }}>
-              <strong>{m.role === "user" ? "You" : "Atlas"}:</strong> {m.content}
-            </div>
-          ))
-        )}
-      </div>
-      {error && (
-        <p style={{ color: "#fca5a5", marginBottom: 8 }}>Error: {error}</p>
-      )}
-      <div style={{ display: "flex", gap: 8 }}>
-        <input
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-          onKeyDown={(e) => {
-            if (e.key === "Enter" && !e.shiftKey) {
-              e.preventDefault();
-              send();
-            }
-          }}
-          placeholder="Type a message..."
-          style={{
-            flex: 1,
-            padding: 10,
-            background: "#1e293b",
-            color: "#e2e8f0",
-            border: "1px solid #334155",
-            borderRadius: 6,
-          }}
-        />
-        <button
-          onClick={send}
-          disabled={busy}
-          style={{
-            padding: "10px 16px",
-            background: busy ? "#475569" : "#2563eb",
-            color: "white",
-            border: "none",
-            borderRadius: 6,
-            cursor: busy ? "not-allowed" : "pointer",
-          }}
-        >
-          {busy ? "..." : "Send"}
-        </button>
-      </div>
-    </main>
+    <div className="flex h-screen flex-col">
+      <TopBar />
+      <main className="container flex-1 overflow-hidden py-4">
+        <div className="grid h-full grid-cols-1 gap-4 lg:grid-cols-[1fr_360px]">
+          {/* Chat takes the main area */}
+          <div className="min-h-0">
+            <ChatPanel />
+          </div>
+
+          {/* Documents panel: shown as a sidebar on lg, as a tab on smaller screens */}
+          <div className="hidden min-h-0 lg:block">
+            <DocumentPanel />
+          </div>
+        </div>
+
+        {/* Mobile / tablet: tabs at the bottom */}
+        <div className="fixed inset-x-0 bottom-0 border-t bg-card p-2 lg:hidden">
+          <Tabs defaultValue="chat" className="w-full">
+            <TabsList className="grid w-full grid-cols-2">
+              <TabsTrigger value="chat">
+                <MessageSquare className="mr-1 h-4 w-4" /> Chat
+              </TabsTrigger>
+              <TabsTrigger value="docs">
+                <Files className="mr-1 h-4 w-4" /> Documents
+              </TabsTrigger>
+            </TabsList>
+            <TabsContent value="chat" className="mt-2 h-[60vh]">
+              <ChatPanel />
+            </TabsContent>
+            <TabsContent value="docs" className="mt-2 h-[60vh]">
+              <DocumentPanel />
+            </TabsContent>
+          </Tabs>
+        </div>
+      </main>
+    </div>
   );
 }

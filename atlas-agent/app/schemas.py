@@ -5,6 +5,7 @@ so a malformed model response becomes a structured error, never a 500.
 """
 from __future__ import annotations
 
+from datetime import datetime
 from typing import Literal
 
 from pydantic import BaseModel, Field
@@ -57,3 +58,32 @@ class ErrorDetail(BaseModel):
 
 class ErrorResponse(BaseModel):
     error: ErrorDetail
+
+
+# ---- Documents (Week 2 surface; the routes land alongside the ingest
+# pipeline). The frontend already speaks this shape. ---------------------
+
+
+DocumentType = Literal["text", "pdf_text", "pdf_scan", "pdf_mixed"]
+IngestStatus = Literal["pending", "processing", "ready", "failed"]
+
+
+class DocumentItem(BaseModel):
+    id: str
+    filename: str
+    type: DocumentType
+    size_bytes: int
+    uploaded_at: datetime
+    status: IngestStatus
+    chunk_count: int | None = None
+    error: str | None = None
+
+
+class DocumentListResponse(BaseModel):
+    documents: list[DocumentItem]
+    total: int
+
+
+class DocumentDeleteResponse(BaseModel):
+    ok: Literal[True] = True
+    id: str
